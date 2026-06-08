@@ -1,0 +1,1064 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>حاسبة التمويل الشخصي</title>
+  <style>
+    @font-face {
+      font-family: "thmanyahseriftext";
+      src: url("https://www.arfonts.net/dw-thmanyah-serif-text-light.woff2") format("woff2");
+      font-weight: 300;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "thmanyahseriftext";
+      src: url("https://www.arfonts.net/dw-thmanyah-serif-text-regular.woff2") format("woff2");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "thmanyahseriftext";
+      src: url("https://www.arfonts.net/dw-thmanyah-serif-text-medium.woff2") format("woff2");
+      font-weight: 500 700;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "thmanyahseriftext";
+      src: url("https://www.arfonts.net/dw-thmanyah-serif-text-bold.woff2") format("woff2");
+      font-weight: 800;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "thmanyahseriftext";
+      src: url("https://www.arfonts.net/dw-thmanyah-serif-text-black.woff2") format("woff2");
+      font-weight: 900;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --bg: #f5f7f4;
+      --surface: #ffffff;
+      --surface-soft: #f9fbf8;
+      --text: #16231d;
+      --muted: #647168;
+      --line: #dce4dd;
+      --primary: #166b4f;
+      --primary-dark: #0f4e3a;
+      --primary-soft: #e6f3ee;
+      --accent: #b9802d;
+      --danger: #9e2f2f;
+      --warning-bg: #fff7df;
+      --warning-line: #e6c46a;
+      --paid-bg: #edf8f2;
+      --paid-text: #176044;
+      --next-bg: #fff5df;
+      --next-line: #db9d35;
+      --shadow: 0 16px 40px rgba(22, 35, 29, 0.08);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(180deg, rgba(22, 107, 79, 0.08), transparent 320px),
+        var(--bg);
+      color: var(--text);
+      font-family: "thmanyahseriftext", "Tahoma", "Arial", sans-serif;
+      line-height: 1.7;
+    }
+
+    button,
+    input,
+    select,
+    table,
+    textarea {
+      font-family: "thmanyahseriftext", "Tahoma", "Arial", sans-serif;
+    }
+
+    .app {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 32px 0 24px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 20px;
+      align-items: end;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(1.9rem, 4vw, 3.4rem);
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      max-width: 720px;
+      font-size: 1rem;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 8px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.74);
+      color: var(--primary-dark);
+      white-space: nowrap;
+      box-shadow: 0 10px 22px rgba(22, 35, 29, 0.05);
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .controls {
+      padding: 20px;
+      margin-bottom: 18px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field label,
+    .group-label {
+      color: var(--text);
+      font-weight: 800;
+      font-size: 0.98rem;
+    }
+
+    .field input {
+      width: 100%;
+      min-height: 48px;
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-soft);
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .field input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(22, 107, 79, 0.12);
+    }
+
+    .option-group {
+      display: grid;
+      gap: 8px;
+    }
+
+    .option-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .option-button {
+      min-height: 42px;
+      padding: 8px 13px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-soft);
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    }
+
+    .option-button:hover {
+      transform: translateY(-1px);
+      border-color: rgba(22, 107, 79, 0.45);
+    }
+
+    .option-button.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 10px 18px rgba(22, 107, 79, 0.18);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .btn {
+      min-height: 46px;
+      padding: 10px 18px;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-weight: 800;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 12px 22px rgba(22, 107, 79, 0.2);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #ffffff;
+      color: var(--primary-dark);
+      border-color: var(--line);
+    }
+
+    .message {
+      display: none;
+      margin-top: 14px;
+      padding: 11px 13px;
+      border-radius: var(--radius);
+      border: 1px solid var(--warning-line);
+      background: var(--warning-bg);
+      color: #77520a;
+    }
+
+    .message.error {
+      border-color: rgba(158, 47, 47, 0.35);
+      background: #fff1f1;
+      color: var(--danger);
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .metric-card {
+      min-height: 116px;
+      padding: 16px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 28px rgba(22, 35, 29, 0.06);
+      display: grid;
+      align-content: space-between;
+      gap: 8px;
+    }
+
+    .metric-card strong {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    .metric-card span {
+      color: var(--text);
+      font-size: clamp(1.08rem, 1.7vw, 1.42rem);
+      font-weight: 900;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
+    .metric-card.highlight {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .metric-card.highlight strong,
+    .metric-card.highlight span {
+      color: #ffffff;
+    }
+
+    .section {
+      padding: 20px;
+      margin-bottom: 18px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .section h2 {
+      margin: 0;
+      font-size: 1.35rem;
+      line-height: 1.3;
+    }
+
+    .section-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .detail-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-soft);
+    }
+
+    .detail-row dt {
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .detail-row dd {
+      margin: 0;
+      color: var(--text);
+      font-weight: 900;
+      text-align: left;
+      overflow-wrap: anywhere;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #ffffff;
+    }
+
+    table {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 12px 13px;
+      border-bottom: 1px solid var(--line);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    th {
+      background: #eef4f0;
+      color: var(--primary-dark);
+      font-weight: 900;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    tbody tr.paid {
+      background: var(--paid-bg);
+      color: var(--paid-text);
+    }
+
+    tbody tr.remaining {
+      background: #ffffff;
+    }
+
+    tbody tr.next {
+      background: var(--next-bg);
+      outline: 2px solid var(--next-line);
+      outline-offset: -2px;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 78px;
+      min-height: 28px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: 0.88rem;
+      border: 1px solid var(--line);
+      background: #ffffff;
+    }
+
+    .paid .status {
+      color: var(--paid-text);
+      border-color: rgba(23, 96, 68, 0.25);
+      background: #ffffff;
+    }
+
+    .next .status {
+      color: #7a4a06;
+      border-color: rgba(219, 157, 53, 0.35);
+      background: #ffffff;
+    }
+
+    .disclaimer {
+      margin: 18px 0 0;
+      padding: 16px 18px;
+      border: 1px solid rgba(185, 128, 45, 0.35);
+      border-radius: var(--radius);
+      background: #fffaf0;
+      color: #5d430d;
+      font-weight: 700;
+    }
+
+    @media (max-width: 980px) {
+      .hero,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        align-items: start;
+      }
+
+      .status-pill {
+        width: fit-content;
+      }
+
+      .dashboard {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .app {
+        width: min(100% - 20px, 1180px);
+        padding-top: 20px;
+      }
+
+      .controls,
+      .section {
+        padding: 14px;
+      }
+
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+
+      .details-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .detail-row dd {
+        text-align: right;
+      }
+
+      .actions .btn {
+        flex: 1 1 150px;
+      }
+
+      .section-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      table {
+        min-width: 820px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="hero">
+      <div>
+        <h1>حاسبة التمويل الشخصي</h1>
+        <p>احسب القسط الشهري ومبلغ التمويل المتوقع وجدول السداد بناءً على نسبة الاستقطاع من الراتب.</p>
+      </div>
+      <div class="status-pill" aria-live="polite">
+        <span>طريقة السداد</span>
+        <strong>قسط شهري ثابت</strong>
+      </div>
+    </header>
+
+    <section class="controls panel" aria-label="مدخلات الحاسبة">
+      <div class="form-grid">
+        <div class="field">
+          <label for="salary">الراتب الشهري الكامل</label>
+          <input id="salary" type="number" inputmode="decimal" min="0" step="0.01" placeholder="أدخل الراتب الشهري">
+        </div>
+
+        <div class="field">
+          <label for="paidInstallments">عدد الدفعات التي تم دفعها</label>
+          <input id="paidInstallments" type="number" inputmode="numeric" min="0" step="1" value="0">
+        </div>
+
+        <div class="option-group">
+          <div class="group-label">نسبة الاستقطاع من الراتب</div>
+          <div class="option-buttons" id="deductionOptions" role="radiogroup" aria-label="نسبة الاستقطاع من الراتب"></div>
+        </div>
+
+        <div class="option-group">
+          <div class="group-label">مدة التمويل</div>
+          <div class="option-buttons" id="durationOptions" role="radiogroup" aria-label="مدة التمويل"></div>
+        </div>
+
+        <div class="option-group">
+          <div class="group-label">نسبة الفائدة / الربح السنوية</div>
+          <div class="option-buttons" id="rateOptions" role="radiogroup" aria-label="نسبة الربح السنوية"></div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="calculateButton" type="button">احسب</button>
+        <button class="btn btn-secondary" id="resetButton" type="button">إعادة ضبط</button>
+      </div>
+
+      <div class="message" id="message" role="status" aria-live="polite"></div>
+    </section>
+
+    <section class="dashboard" id="dashboard" aria-label="ملخص النتائج"></section>
+
+    <section class="section panel">
+      <div class="section-header">
+        <h2>تفاصيل الحساب</h2>
+        <p class="section-note">القيم تتحدث تلقائيًا عند تغيير المدخلات.</p>
+      </div>
+      <dl class="details-grid" id="detailsGrid"></dl>
+    </section>
+
+    <section class="section panel">
+      <div class="section-header">
+        <h2>مقارنة نسب الاستقطاع</h2>
+        <p class="section-note">بناءً على الراتب والمدة ونسبة الربح المحددة.</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>نسبة الاستقطاع</th>
+              <th>القسط الشهري</th>
+              <th>مبلغ التمويل المتوقع</th>
+              <th>إجمالي السداد</th>
+              <th>إجمالي الربح</th>
+            </tr>
+          </thead>
+          <tbody id="deductionComparisonBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section panel">
+      <div class="section-header">
+        <h2>مقارنة نسب الربح السنوية</h2>
+        <p class="section-note">بناءً على الراتب ونسبة الاستقطاع والمدة المحددة.</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>نسبة الربح السنوية</th>
+              <th>القسط الشهري</th>
+              <th>مبلغ التمويل المتوقع</th>
+              <th>إجمالي السداد</th>
+              <th>إجمالي الربح</th>
+            </tr>
+          </thead>
+          <tbody id="rateComparisonBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section panel">
+      <div class="section-header">
+        <h2>جدول السداد الشهري</h2>
+        <p class="section-note">الدفعة التالية غير المدفوعة مميزة بلون مختلف.</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>الدفعة</th>
+              <th>الرصيد قبل الدفعة</th>
+              <th>القسط</th>
+              <th>الربح</th>
+              <th>أصل القرض</th>
+              <th>الرصيد بعد الدفعة</th>
+              <th>الحالة</th>
+            </tr>
+          </thead>
+          <tbody id="scheduleBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <p class="disclaimer">
+      تنبيه: هذه الحاسبة تقديرية فقط ولا تعتبر عرضًا تمويليًا رسميًا. طريقة احتساب الربح أو هامش الربح قد تختلف حسب الجهة التمويلية، الرسوم الإدارية، التأمين، وتاريخ بداية السداد.
+    </p>
+  </main>
+
+  <script>
+    const deductionRates = [0.30, 0.25, 0.20, 0.15, 0.10, 0.075, 0.05, 0.03, 0.025];
+    const annualRates = [0.075, 0.053, 0.052, 0.048, 0.045, 0.035, 0.02, 0.01];
+    const durations = [
+      { months: 60, label: "5 سنوات = 60 شهر" },
+      { months: 36, label: "3 سنوات = 36 شهر" },
+      { months: 24, label: "سنتين = 24 شهر" },
+      { months: 12, label: "سنة = 12 شهر" }
+    ];
+
+    const defaults = {
+      deductionRate: 0.30,
+      months: 60,
+      annualRate: 0.053
+    };
+
+    const state = { ...defaults };
+
+    const elements = {
+      salary: document.getElementById("salary"),
+      paidInstallments: document.getElementById("paidInstallments"),
+      deductionOptions: document.getElementById("deductionOptions"),
+      durationOptions: document.getElementById("durationOptions"),
+      rateOptions: document.getElementById("rateOptions"),
+      calculateButton: document.getElementById("calculateButton"),
+      resetButton: document.getElementById("resetButton"),
+      message: document.getElementById("message"),
+      dashboard: document.getElementById("dashboard"),
+      detailsGrid: document.getElementById("detailsGrid"),
+      deductionComparisonBody: document.getElementById("deductionComparisonBody"),
+      rateComparisonBody: document.getElementById("rateComparisonBody"),
+      scheduleBody: document.getElementById("scheduleBody")
+    };
+
+    const moneyFormatter = new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+
+    function formatMoney(value) {
+      const safeValue = Number.isFinite(value) ? Math.max(0, value) : 0;
+      return `${moneyFormatter.format(safeValue)} ريال`;
+    }
+
+    function formatPercent(value) {
+      const percentage = Number.isFinite(value) ? value * 100 : 0;
+      return `${Number.parseFloat(percentage.toFixed(3))}%`;
+    }
+
+    function formatMonths(months) {
+      const years = months / 12;
+      const yearText = years === 1 ? "سنة" : years === 2 ? "سنتان" : `${years} سنوات`;
+      return `${months} شهر (${yearText})`;
+    }
+
+    function createOptionButton({ text, value, group, selected, onClick }) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = `option-button${selected ? " active" : ""}`;
+      button.textContent = text;
+      button.dataset.value = String(value);
+      button.setAttribute("role", "radio");
+      button.setAttribute("aria-checked", selected ? "true" : "false");
+      button.addEventListener("click", () => {
+        onClick(value);
+        setActiveOption(group, value);
+        calculate();
+      });
+      group.appendChild(button);
+    }
+
+    function setActiveOption(group, value) {
+      Array.from(group.querySelectorAll(".option-button")).forEach((button) => {
+        const isActive = Number(button.dataset.value) === Number(value);
+        button.classList.toggle("active", isActive);
+        button.setAttribute("aria-checked", isActive ? "true" : "false");
+      });
+    }
+
+    function renderOptions() {
+      elements.deductionOptions.innerHTML = "";
+      deductionRates.forEach((rate) => {
+        createOptionButton({
+          text: formatPercent(rate),
+          value: rate,
+          group: elements.deductionOptions,
+          selected: rate === state.deductionRate,
+          onClick: (value) => { state.deductionRate = Number(value); }
+        });
+      });
+
+      elements.durationOptions.innerHTML = "";
+      durations.forEach((duration) => {
+        createOptionButton({
+          text: duration.label,
+          value: duration.months,
+          group: elements.durationOptions,
+          selected: duration.months === state.months,
+          onClick: (value) => {
+            state.months = Number(value);
+            elements.paidInstallments.max = String(state.months);
+          }
+        });
+      });
+
+      elements.rateOptions.innerHTML = "";
+      annualRates.forEach((rate) => {
+        createOptionButton({
+          text: formatPercent(rate),
+          value: rate,
+          group: elements.rateOptions,
+          selected: rate === state.annualRate,
+          onClick: (value) => { state.annualRate = Number(value); }
+        });
+      });
+    }
+
+    function calculatePrincipal(monthlyInstallment, monthlyRate, months) {
+      // Present value of a fixed monthly payment: this finds the principal supported by the selected installment.
+      if (monthlyRate > 0) {
+        return monthlyInstallment * (1 - Math.pow(1 + monthlyRate, -months)) / monthlyRate;
+      }
+
+      return monthlyInstallment * months;
+    }
+
+    function buildSchedule(principal, monthlyInstallment, monthlyRate, months, paidInstallments) {
+      const rows = [];
+      let balance = principal;
+
+      for (let month = 1; month <= months; month += 1) {
+        const openingBalance = Math.max(0, balance);
+        let profitForMonth = openingBalance * monthlyRate;
+        let principalPaid = monthlyInstallment - profitForMonth;
+        let closingBalance = openingBalance - principalPaid;
+
+        // The final row is adjusted so tiny rounding differences never leave a negative or residual balance.
+        if (month === months || closingBalance < 0.005) {
+          principalPaid = openingBalance;
+          profitForMonth = Math.max(0, monthlyInstallment - principalPaid);
+          closingBalance = 0;
+        }
+
+        rows.push({
+          month,
+          openingBalance,
+          monthlyInstallment,
+          profitForMonth: Math.max(0, profitForMonth),
+          principalPaid: Math.max(0, principalPaid),
+          closingBalance: Math.max(0, closingBalance),
+          status: month <= paidInstallments ? "مدفوعة" : "متبقية"
+        });
+
+        balance = closingBalance;
+      }
+
+      return rows;
+    }
+
+    function getInputs() {
+      const salary = Number(elements.salary.value);
+      let paidInstallments = Number.parseInt(elements.paidInstallments.value || "0", 10);
+      let warning = "";
+
+      if (!Number.isFinite(paidInstallments)) {
+        paidInstallments = 0;
+      }
+
+      if (paidInstallments < 0) {
+        paidInstallments = 0;
+        elements.paidInstallments.value = "0";
+      }
+
+      if (paidInstallments > state.months) {
+        paidInstallments = state.months;
+        elements.paidInstallments.value = String(state.months);
+        warning = "تم تعديل عدد الدفعات المدفوعة ليطابق مدة التمويل.";
+      }
+
+      elements.paidInstallments.max = String(state.months);
+
+      return { salary, paidInstallments, warning };
+    }
+
+    function calculateLoan({ salary, deductionRate, annualRate, months, paidInstallments }) {
+      const monthlyRate = annualRate / 12;
+      const monthlyInstallment = salary * deductionRate;
+      const principal = calculatePrincipal(monthlyInstallment, monthlyRate, months);
+      const totalRepayment = monthlyInstallment * months;
+      const totalProfit = totalRepayment - principal;
+      const remainingInstallments = months - paidInstallments;
+      const paidAmount = monthlyInstallment * paidInstallments;
+      const schedule = buildSchedule(principal, monthlyInstallment, monthlyRate, months, paidInstallments);
+
+      let remainingPrincipal = paidInstallments === 0
+        ? principal
+        : schedule[Math.min(paidInstallments, months) - 1]?.closingBalance || 0;
+      let remainingTotalPayments = monthlyInstallment * remainingInstallments;
+      let remainingProfit = remainingTotalPayments - remainingPrincipal;
+
+      if (paidInstallments >= months) {
+        remainingPrincipal = 0;
+        remainingTotalPayments = 0;
+        remainingProfit = 0;
+      }
+
+      return {
+        salary,
+        deductionRate,
+        annualRate,
+        monthlyRate,
+        months,
+        paidInstallments,
+        monthlyInstallment,
+        principal,
+        totalRepayment,
+        totalProfit,
+        remainingInstallments,
+        paidAmount,
+        remainingPrincipal,
+        remainingTotalPayments,
+        remainingProfit,
+        schedule
+      };
+    }
+
+    function zeroResult(salary = 0, paidInstallments = 0) {
+      return calculateLoan({
+        salary,
+        deductionRate: state.deductionRate,
+        annualRate: state.annualRate,
+        months: state.months,
+        paidInstallments
+      });
+    }
+
+    function showMessage(text, type = "warning") {
+      elements.message.textContent = text;
+      elements.message.className = `message show${type === "error" ? " error" : ""}`;
+    }
+
+    function clearMessage() {
+      elements.message.textContent = "";
+      elements.message.className = "message";
+    }
+
+    function renderDashboard(result) {
+      const cards = [
+        ["القسط الشهري", formatMoney(result.monthlyInstallment), true],
+        ["مبلغ التمويل المتوقع", formatMoney(result.principal), true],
+        ["إجمالي السداد", formatMoney(result.totalRepayment), false],
+        ["إجمالي الربح", formatMoney(result.totalProfit), false],
+        ["عدد الدفعات الكلي", `${result.months}`, false],
+        ["الدفعات المتبقية", `${result.remainingInstallments}`, false],
+        ["المدفوع حتى الآن", formatMoney(result.paidAmount), false],
+        ["المتبقي للسداد", formatMoney(result.remainingTotalPayments), false],
+        ["أصل القرض المتبقي", formatMoney(result.remainingPrincipal), false],
+        ["الربح المتبقي", formatMoney(result.remainingProfit), false]
+      ];
+
+      elements.dashboard.innerHTML = cards.map(([label, value, highlight]) => `
+        <article class="metric-card${highlight ? " highlight" : ""}">
+          <strong>${label}</strong>
+          <span>${value}</span>
+        </article>
+      `).join("");
+    }
+
+    function renderDetails(result) {
+      const details = [
+        ["الراتب الشهري", formatMoney(result.salary)],
+        ["نسبة الاستقطاع المختارة", formatPercent(result.deductionRate)],
+        ["مدة التمويل بالأشهر والسنوات", formatMonths(result.months)],
+        ["نسبة الربح السنوية", formatPercent(result.annualRate)],
+        ["نسبة الربح الشهرية", formatPercent(result.monthlyRate)],
+        ["عدد الدفعات المدفوعة", `${result.paidInstallments}`],
+        ["عدد الدفعات المتبقية", `${result.remainingInstallments}`],
+        ["مبلغ التمويل المتوقع", formatMoney(result.principal)],
+        ["إجمالي السداد", formatMoney(result.totalRepayment)],
+        ["إجمالي الربح", formatMoney(result.totalProfit)],
+        ["المدفوع حتى الآن", formatMoney(result.paidAmount)],
+        ["المتبقي للسداد", formatMoney(result.remainingTotalPayments)],
+        ["أصل القرض المتبقي", formatMoney(result.remainingPrincipal)],
+        ["الربح المتبقي", formatMoney(result.remainingProfit)]
+      ];
+
+      elements.detailsGrid.innerHTML = details.map(([label, value]) => `
+        <div class="detail-row">
+          <dt>${label}</dt>
+          <dd>${value}</dd>
+        </div>
+      `).join("");
+    }
+
+    function renderDeductionComparison(salary) {
+      elements.deductionComparisonBody.innerHTML = deductionRates.map((deductionRate) => {
+        const comparison = calculateLoan({
+          salary,
+          deductionRate,
+          annualRate: state.annualRate,
+          months: state.months,
+          paidInstallments: 0
+        });
+
+        return `
+          <tr>
+            <td>${formatPercent(deductionRate)}</td>
+            <td>${formatMoney(comparison.monthlyInstallment)}</td>
+            <td>${formatMoney(comparison.principal)}</td>
+            <td>${formatMoney(comparison.totalRepayment)}</td>
+            <td>${formatMoney(comparison.totalProfit)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function renderRateComparison(salary) {
+      elements.rateComparisonBody.innerHTML = annualRates.map((annualRate) => {
+        const comparison = calculateLoan({
+          salary,
+          deductionRate: state.deductionRate,
+          annualRate,
+          months: state.months,
+          paidInstallments: 0
+        });
+
+        return `
+          <tr>
+            <td>${formatPercent(annualRate)}</td>
+            <td>${formatMoney(comparison.monthlyInstallment)}</td>
+            <td>${formatMoney(comparison.principal)}</td>
+            <td>${formatMoney(comparison.totalRepayment)}</td>
+            <td>${formatMoney(comparison.totalProfit)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function renderSchedule(result) {
+      const nextUnpaidMonth = result.paidInstallments < result.months ? result.paidInstallments + 1 : null;
+
+      elements.scheduleBody.innerHTML = result.schedule.map((row) => {
+        const rowClass = row.month === nextUnpaidMonth ? "next" : row.month <= result.paidInstallments ? "paid" : "remaining";
+
+        return `
+          <tr class="${rowClass}">
+            <td>${row.month}</td>
+            <td>${formatMoney(row.openingBalance)}</td>
+            <td>${formatMoney(row.monthlyInstallment)}</td>
+            <td>${formatMoney(row.profitForMonth)}</td>
+            <td>${formatMoney(row.principalPaid)}</td>
+            <td>${formatMoney(row.closingBalance)}</td>
+            <td><span class="status">${row.status}</span></td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function renderAll(result) {
+      renderDashboard(result);
+      renderDetails(result);
+      renderDeductionComparison(result.salary);
+      renderRateComparison(result.salary);
+      renderSchedule(result);
+    }
+
+    function calculate() {
+      const { salary, paidInstallments, warning } = getInputs();
+
+      if (!Number.isFinite(salary) || salary <= 0) {
+        const result = zeroResult(0, paidInstallments);
+        renderAll(result);
+        showMessage("الرجاء إدخال راتب شهري صحيح.", "error");
+        return;
+      }
+
+      const result = calculateLoan({
+        salary,
+        deductionRate: state.deductionRate,
+        annualRate: state.annualRate,
+        months: state.months,
+        paidInstallments
+      });
+
+      renderAll(result);
+
+      if (warning) {
+        showMessage(warning);
+      } else {
+        clearMessage();
+      }
+    }
+
+    function resetCalculator() {
+      state.deductionRate = defaults.deductionRate;
+      state.months = defaults.months;
+      state.annualRate = defaults.annualRate;
+      elements.salary.value = "";
+      elements.paidInstallments.value = "0";
+      elements.paidInstallments.max = String(defaults.months);
+      setActiveOption(elements.deductionOptions, state.deductionRate);
+      setActiveOption(elements.durationOptions, state.months);
+      setActiveOption(elements.rateOptions, state.annualRate);
+      calculate();
+    }
+
+    elements.salary.addEventListener("input", calculate);
+    elements.paidInstallments.addEventListener("input", calculate);
+    elements.calculateButton.addEventListener("click", calculate);
+    elements.resetButton.addEventListener("click", resetCalculator);
+
+    renderOptions();
+    calculate();
+  </script>
+</body>
+</html>
